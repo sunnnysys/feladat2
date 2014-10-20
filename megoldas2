@@ -1,0 +1,109 @@
+import java.util.Scanner;
+
+public class Szamol3Teszt {
+
+    public static void main(String[] args) {        
+        System.out.println("Hány eleme van az osztálynak?");
+        Scanner scanner = new Scanner(System.in);
+        int meret = scanner.nextInt();
+        Tarolo t = new Tarolo();
+        for (int i = 0; i < meret; i++) {
+            System.out.println(i + 1 + ". szám:");
+            t.ujElem(scanner.nextInt());
+        }
+        System.out.println("A számok növekvő sorrendben:");
+        System.out.println(t.novekvo());
+        System.out.println("Az osztály: " + t.getMeret() + " elemet tartalmaz.");
+        System.out.println("Az osztály legkisebb eleme: " + t.novekvo().get(0) + ".");
+        System.out.println("Az osztály legnagyobb eleme: " + t.novekvo().get(t.getMeret() - 1) + ".");
+        System.out.println("Az osztály legkisebb és a legnagyobb elemeinek közös osztói: " + t.kozosOszto());
+        System.out.println("Az osztály elemeinek átlaga: " + t.atlag());
+        System.out.println("Az osztály mediánja: " + t.median());
+        System.out.println("Az osztály eredeti sorrendje: " + t.eredetiSorrend());
+        System.out.println("");
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+import java.util.ArrayList;
+
+public class Tarolo {
+    
+    private final ArrayList SzamSor1;
+
+    public Tarolo() {
+        this.SzamSor1 = new ArrayList();
+    }
+
+    public int getMeret() {
+        return SzamSor1.size();
+    }
+
+    public void ujElem(int elem) {
+        this.SzamSor1.add(elem);
+    }
+
+    public ArrayList novekvo() {
+        ArrayList SzamSor2 = new ArrayList();
+        for (int i = 0; i < getMeret(); i++) {
+            SzamSor2.add(SzamSor1.get(i));
+        }
+        for (int i = 0; i < getMeret() - 1; i++) {
+            for (int j = i + 1; j < getMeret(); j++) {
+                if ((int) SzamSor2.get(i) > (int) SzamSor2.get(j)) {
+                    int temp = (int) SzamSor2.get(j);
+                    SzamSor2.set(j, SzamSor2.get(i));
+                    SzamSor2.set(i, temp);
+                }
+            }
+        }
+        return SzamSor2;
+    }
+
+    public ArrayList kozosOszto() {
+        ArrayList KozosOsztok = new ArrayList();
+        int elsoElem = (int) novekvo().get(0);
+        int utolsoElem = (int) novekvo().get(getMeret() - 1);
+        int nagy;
+        if (elsoElem > utolsoElem) {
+            nagy = elsoElem;
+        } else {
+            nagy = utolsoElem;
+        }
+        for (int i = 1; i < nagy; i++) {
+            if (elsoElem % i == 0 && utolsoElem % i == 0) {
+                KozosOsztok.add(i);
+            }
+        }
+        return KozosOsztok;
+    }
+
+    public double atlag() {
+        int osszeg = 0;
+        double atlag;
+        for (int i = 0; i < getMeret(); i++) {
+            osszeg = osszeg + (int) novekvo().get(i);
+        }
+        atlag = osszeg / getMeret();
+        return atlag;
+    }
+
+    public double median() {
+        double median = 0;
+        int elem1 = (int) novekvo().get(getMeret() / 2 - 1);
+        int elem2 = (int) novekvo().get(getMeret() / 2);
+        for (int i = 0; i < getMeret(); i++) {
+            if (getMeret() % 2 == 0) {
+                median = (elem1 + elem2) / 2;
+            } else {
+                median = elem2;
+            }
+        }
+        return median;
+    }
+
+    public ArrayList eredetiSorrend() {
+        return SzamSor1;
+    }
+}
